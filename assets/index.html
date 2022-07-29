@@ -1,0 +1,132 @@
+<html>
+    <head>
+        <title>Test page</title>
+        <style type="text/css">
+            body {
+                /*
+                Necessary to prevent crashing.
+                See: https://discord.com/channels/738779721541746696/738789878120185918/982913476819308585
+                */
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -o-user-select: none;
+                user-select: none;
+            }
+
+            html,
+            body {
+                margin: 0;
+                background: transparent;
+            }
+
+            #main {
+                height: 100%;
+                display: grid;
+                grid-gap: 0px;
+                grid-template-rows: 150px minmax(400px, 1fr) 50px;
+                grid-template-columns: 200px minmax(200px, 1fr) 200px;
+            }
+
+            .box {
+                margin: 0;
+                border: 1px solid #b0bec5;
+                background: white;
+            }
+
+            .box-1 {
+                grid-column: 1 / -1;
+                padding: 1rem;
+            }
+
+            .box-5 {
+                border: 1px solid green;
+                background: transparent;
+            }
+
+            button {
+                display: inline-block;
+                outline: 0;
+                border: 0;
+                cursor: pointer;
+                background-color: white;
+                border-radius: 4px;
+                padding: 8px 16px;
+                font-size: 16px;
+                font-weight: 600;
+                color: #2d3748;
+                border: 1px solid #cbd5e0;
+                line-height: 26px;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            }
+        </style>
+    </head>
+    <script type="text/javascript">
+        let showOpenGLArea = true;
+        let body;
+        let openGLArea;
+
+        function toggleOpenGLArea(event) {
+            const color = showOpenGLArea ? "black" : "transparent";
+            document.getElementsByClassName("box-5")[0].style.backgroundColor = color;
+
+            showOpenGLArea = !showOpenGLArea;
+        }
+
+        function isOpenGLAreaActive() {
+            /* The opengl area is active if either:
+                1. The active element is body
+                2. The active element has the class "opengl-area"
+            */
+            const active = document.activeElement;
+            return active === body || active.classList.contains("opengl-area");
+        }
+
+        window.addEventListener("DOMContentLoaded", (event) => {
+            body = document.getElementsByTagName("body")[0];
+            openGLArea = Array.from(document.getElementsByClassName("opengl-area"));
+
+            // document.addEventListener("click", (evnt) => {});
+
+            openGLArea.forEach((element) => {
+                element.addEventListener("mousedown", (event) => {
+                    if (isOpenGLAreaActive()) {
+                        onGLMouseEvent(event);
+                    }
+                });
+
+                element.addEventListener("mousemove", (event) => {
+                    if (isOpenGLAreaActive()) {
+                        onGLMouseEvent(event);
+                    }
+                });
+            });
+
+            document.addEventListener("wheel", (event) => {
+                if (isOpenGLAreaActive()) {
+                    onGLWheelEvent(event.deltaX, event.deltaY);
+                }
+            });
+
+            document.addEventListener("keydown", (event) => {
+                if (isOpenGLAreaActive()) {
+                    onGLKeyEvent(event);
+                }
+            });
+        });
+    </script>
+    <body>
+        <div id="main">
+            <div class="box box-1">
+                <button role="button" onclick="toggleOpenGLArea(event)">Toggle OpenGL Area</button>
+                <input type="text" />
+            </div>
+            <div class="box box-4">4</div>
+            <div class="box box-5 opengl-area">5</div>
+            <div class="box box-6">6</div>
+            <div class="box box-7">7</div>
+            <div class="box box-8">8</div>
+            <div class="box box-9">9</div>
+        </div>
+    </body>
+</html>
